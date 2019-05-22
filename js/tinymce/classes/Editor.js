@@ -711,10 +711,16 @@ define("tinymce/Editor", [
 
 			ifr.onload = function() {
 				ifr.onload = null;
+				if (!url) {
+					self.initContentBody();
+				}
 				self.fire("load");
 			};
-
-			DOM.setAttrib(ifr, "src", url || 'javascript:""');
+                        var src = 'javascript:""';
+                        if (self.settings.editor_file) {
+                            src = self.documentBaseURI.toAbsolute(self.settings.editor_file);
+                        }
+			DOM.setAttrib(ifr, "src", url || src);
 
 			self.contentAreaContainer = o.iframeContainer;
 			self.iframeElement = ifr;
@@ -738,10 +744,6 @@ define("tinymce/Editor", [
 
 			self.getElement().style.display = 'none';
 			DOM.setAttrib(self.id, 'aria-hidden', true);
-
-			if (!url) {
-				self.initContentBody();
-			}
 
 			elm = n = o = null; // Cleanup
 		},
